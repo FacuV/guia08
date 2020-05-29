@@ -1,5 +1,7 @@
 package frsf.isi.died.guia08.problema01.modelo;
 
+import frsf.isi.died.guia08.problema01.excepciones.TareaException;
+
 import java.time.LocalDateTime;
 
 public class Tarea {
@@ -12,9 +14,20 @@ public class Tarea {
 	private LocalDateTime fechaFin;
 	private Boolean facturada;
 	
-	public void asignarEmpleado(Empleado e) {
-		// si la tarea ya tiene un empleado asignado
-		// y tiene fecha de finalizado debe lanzar una excepcion
+	public void asignarEmpleado(Empleado e) throws TareaException{
+		if(fechaFin != null && empleadoAsignado != null){throw new TareaException("La tarea tiene un empleado asignado y fue finalizada");}
+		e.getTareasAsignadas().add(this);
+		empleadoAsignado = e;
+	}
+
+	public Tarea(Integer id, String descripcion, Integer duracionEstimada, Empleado empleadoAsignado) {
+		this.id = id;
+		this.descripcion = descripcion;
+		this.duracionEstimada = duracionEstimada;
+		this.empleadoAsignado = empleadoAsignado;
+		this.fechaInicio = fechaInicio;
+		this.fechaFin = fechaFin;
+		this.facturada = facturada;
 	}
 
 	public Integer getId() {
@@ -24,6 +37,8 @@ public class Tarea {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+	public void setEmpleadoAsignado(Empleado empleadoAsignado) {this.empleadoAsignado = empleadoAsignado;}
 
 	public String getDescripcion() {
 		return descripcion;
@@ -68,6 +83,7 @@ public class Tarea {
 	public Empleado getEmpleadoAsignado() {
 		return empleadoAsignado;
 	}
-	
-	
+	public String asCsv(){
+		return (this.id + ";" + this.descripcion + ";" + this.duracionEstimada + ";" + this.empleadoAsignado.getCuil());
+	}
 }
